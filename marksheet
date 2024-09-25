@@ -1,0 +1,83 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+
+using namespace std;
+
+struct Student {
+    string name;
+    string roll_no;
+    int cs_marks;     // Marks for Computer Science
+    int maths_marks;  // Marks for Maths
+    int physics_marks; // Marks for Physics
+};
+
+void inputStudentDetails(Student &student) {
+    cout << "Enter Student Name: ";
+    getline(cin, student.name);
+
+    cout << "Enter Roll No: ";
+    getline(cin, student.roll_no);
+
+    cout << "Enter Marks Obtained in Computer Science: ";
+    cin >> student.cs_marks;
+
+    cout << "Enter Marks Obtained in Maths: ";
+    cin >> student.maths_marks;
+
+    cout << "Enter Marks Obtained in Physics: ";
+    cin >> student.physics_marks;
+    cin.ignore(); // Consume newline character
+}
+
+void printMarksheet(const Student &student) {
+    int total_marks = student.cs_marks + student.maths_marks + student.physics_marks;
+    bool is_pass = (student.cs_marks >= 35 && student.maths_marks >= 35 && student.physics_marks >= 35); // Assuming passing marks is 35
+
+    cout << "\n---------------------------------------------------------\n";
+    cout << "                        MARKSHEET                        " << endl;
+    cout << "---------------------------------------------------------\n";
+    cout << left << setw(20) << "Subject" << "Marks" << endl;
+    cout << "---------------------------------------------------------\n";
+    cout << left << setw(20) << "Computer Science" << student.cs_marks << endl;
+    cout << left << setw(20) << "Maths" << student.maths_marks << endl;
+    cout << left << setw(20) << "Physics" << student.physics_marks << endl;
+    cout << "---------------------------------------------------------\n";
+    cout << left << setw(20) << "Total" << total_marks << endl;
+    cout << left << setw(20) << "Status" << (is_pass ? "Pass" : "Fail") << endl;
+    cout << "---------------------------------------------------------\n";
+}
+
+void initializeStudents(vector<Student> &students) {
+    students.push_back({"Alice Smith", "001", 85, 90, 78});
+    students.push_back({"Bob Johnson", "002", 90, 30, 88});
+    students.push_back({"Charlie Brown", "003", 75, 80, 70});
+    students.push_back({"David Wilson", "004", 88, 92, 84});
+    students.push_back({"Eve Davis", "005", 92, 89, 29}); // Testing Fail case
+}
+
+int main() {
+    vector<Student> students;
+
+    // Initialize the list of students
+    initializeStudents(students);
+
+    // Retrieve marksheet by roll number
+    string rollNoToSearch;
+    cout << "Enter Roll Number to retrieve marksheet: ";
+    getline(cin, rollNoToSearch);
+
+    auto it = find_if(students.begin(), students.end(), [&rollNoToSearch](const Student &s) {
+        return s.roll_no == rollNoToSearch;
+    });
+
+    if (it != students.end()) {
+        printMarksheet(*it);
+    } else {
+        cout << "Student with Roll No. " << rollNoToSearch << " not found." << endl;
+    }
+
+    return 0;
+}
